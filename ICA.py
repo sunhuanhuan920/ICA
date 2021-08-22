@@ -6,11 +6,19 @@
 """
 
 import numpy as np
+from scipy.special import expit # signmoid function
 
 class ICA():
-    def __init__(self, alpha=0.1):
+    def __init__(self, alpha=0.1, method="logistic", iterations=100):
         # learning rate set by user
         self.alpha = alpha
+
+        # the assumption that user want to make to the souce signal
+        # logistic source or laplace source
+        self.method = method
+
+        # the number of iterations to run gradient ascent algorithm
+        self.epoch = iterations
 
     def fit(self, X):
         # number of examples(time points) and number of features(microphones that have recording)
@@ -22,20 +30,29 @@ class ICA():
         # since all zeros matrix is a singular matrix
         self.W = np.random.rand(self.n_features, self.n_features)
 
-        # stochastic gradient ascent
-        # disrupt the order of training set
-        random_order = np.random.permutation(self.n_examples)
+        # run stochastic gradient ascent for a certain number of epoch
+        for e in range(self.epoch):
+            print("Epoch: {}".format(e+1))
+            # disrupt the order of training set
+            random_order = np.random.permutation(self.n_examples)
 
-        for i in random_order:
-            # choose one example from the disrupted training set
-            # and make it a column vector
-            x = np.expand_dims(X[i, :], axis=1)
+            for i in random_order:
+                # choose one example from the disrupted training set
+                # and make it a column vector
+                x = np.expand_dims(X[i, :], axis=1)
 
-            # gradient using Laplace distribution (Assuming sources are laplace distributed)
-            gradient = np.linalg.inv(self.W.T) - np.sign(self.W.dot(x)).dot(x.T)
+                if self.method == "logistic":
+                    # gradient using logistic distribution (Assuming sources are logistic distributed)
+                    gradient = np.linalg.inv(self.W.T) + (1 - 2 * expit(self.W.dot(x))).dot(x.T)
 
-            # gradient ascent
-            self.W = self.W + self.alpha * gradient
+                elif self.method == "laplace":
+                    # gradient using Laplace distribution (Assuming sources are laplace distributed)
+                    gradient = np.linalg.inv(self.W.T) - np.sign(self.W.dot(x)).dot(x.T)
+
+                # gradient ascent
+                self.W = self.W + self.alpha * gradient
+            
+            print("\tCompleted")
 
     def transform(self, X):
         # recover the original sources

@@ -15,7 +15,7 @@ for i in range(X.shape[1]):
     scipy.io.wavfile.write("./Signals/input/mixed_{}.wav".format(i), 11025, X[:, i])
 
 # perform independet component analysis
-ica = ICA(alpha=0.01)
+ica = ICA(alpha=0.1, method="logistic", iterations=50)
 ica.fit(X)
 S = ica.transform(X)
 
