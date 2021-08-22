@@ -2,18 +2,37 @@ import numpy as np
 import scipy.io.wavfile
 
 class ICA():
-    def __init__(self):
-        pass
+    def __init__(self, alpha=0.1):
+        # learning rate set by user
+        self.alpha = alpha
 
     def fit(self, X):
-        pass
+        # number of examples(time points) and number of features(microphones that have recording)
+        self.n_examples, self.n_features = X.shape
+
+        # Initialize W for stochastic gradient ascent
+        # normally I initialize this matrix to all zeros matrix using np.zeros
+        # however if we do that in ICA, we would not be able to find the inverse of this matrix
+        # since all zeros matrix is a singular matrix
+        self.W = np.random.rand(self.n_features, self.n_features)
+
+        # stochastic gradient ascent
+        # disrupt the order of training set
+        random_order = np.random.permutation(self.n_examples)
+
+        for i in random_order:
+            # choose one example from the disrupted training set
+            # and make it a column vector
+            x = np.expand_dims(X[i, :], axis=1)
+
+            # gradient using Laplace distribution (Assuming sources are laplace distributed)
+            gradient = np.linalg.inv(self.W.T) - np.sign(self.W.dot(x)).dot(x.T)
+
+            # gradient ascent
+            self.W = self.W + self.alpha * gradient
 
     def transform(self, X):
-        pass
+        # recover the original sources
+        S = self.W.dot(X.T)
 
-# load data
-X = np.loadtxt("./Data/mix.dat")
-
-# convert numerical matrix data back to sound wave file
-for i in range(X.shape[1]):
-    scipy.io.wavfile.write("Signals/input/mixed_{}.wav".format(i), 11025, X[:, i])
+        return S
