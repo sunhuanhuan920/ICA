@@ -1,5 +1,11 @@
+"""
+    Independent Component Analysis Class
+        - Laplace Sources
+        - Logistic Sources
+    Arthor: Zhenhuan(Steven) Sun
+"""
+
 import numpy as np
-import scipy.io.wavfile
 
 class ICA():
     def __init__(self, alpha=0.1):
