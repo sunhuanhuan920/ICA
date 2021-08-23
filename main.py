@@ -5,7 +5,7 @@
 
 from ICA import ICA
 import numpy as np
-import scipy.io.wavfile
+import scipy.io.wavfile # for reading and writing wave file
 
 # load data
 X = np.loadtxt("./Data/mix.dat")

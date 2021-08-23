@@ -6,7 +6,7 @@
 """
 
 import numpy as np
-from scipy.special import expit # signmoid function
+from scipy.special import expit # to get access to signmoid function
 
 class ICA():
     def __init__(self, alpha=0.1, method="logistic", iterations=100):
