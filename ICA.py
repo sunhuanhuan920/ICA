@@ -58,4 +58,7 @@ class ICA():
         # recover the original sources
         S = self.W.dot(X.T)
 
+        # lower down the signal voice
+        S = S / np.max(np.abs(S))
+
         return S
