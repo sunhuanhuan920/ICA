@@ -9,7 +9,7 @@ import numpy as np
 from scipy.special import expit # to get access to signmoid function
 
 class ICA():
-    def __init__(self, alpha=0.1, method="logistic", iterations=50):
+    def __init__(self, alpha=0.1, method="logistic", iterations=10):
         # learning rate set by user
         self.alpha = alpha
 
