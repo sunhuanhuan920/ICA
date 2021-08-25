@@ -4,7 +4,7 @@
     Arthor: Zhenhuan(Steven) Sun
 """
 
-from ICA import ICA
+from ica import ICA
 import numpy as np
 import scipy.io.wavfile # for reading and writing wave file
 import matplotlib.pyplot as plt
