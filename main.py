@@ -1,5 +1,6 @@
 """
     Test bench for ICA class
+    Signal visualization of both mixed and unmixed signals
     Arthor: Zhenhuan(Steven) Sun
 """
 
